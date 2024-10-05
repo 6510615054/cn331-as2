@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+
+{% block tile %}
+<title>View Course</title>
+{% endblock %}
+
+{% block content %}
+
+<h2>This is course page</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Subject ID</th>
+            <th scope="col">Subject Name</th>
+            <th scope="col">Education Sector</th>
+            <th scope="col">Education Year</th>
+            <th scope="col">Capacity</th>
+            <th scope="col">Available seats</th>
+            <th scope="col">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for subject in Subject %}
+        <tr>
+            <th scope="row">{{subject.sjID}}</th>
+            <td>{{subject.sName}}</td>
+            <td>{{subject.eduSec}}</td>
+            <td>{{subject.eduYear}}</td>
+            <td>{{subject.seatAva}}</td>
+            <td>{{subject.seatAva}}</td>
+            <td> {% if subject.status %}
+                Available
+                {% else %}
+                Not Available
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

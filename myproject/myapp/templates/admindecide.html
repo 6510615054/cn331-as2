@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Admin</title>
+    <style>
+        /* Matching dark background with gradient */
+        body {
+            background-color: #121212;
+            background-image: linear-gradient(135deg, #1a1a1b, #181818);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Styling the logout button */
+        .logout-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #fe4747; /* Matching yellow tone */
+            color: #121212;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background-color: #de0808;
+            transform: scale(1.05);
+        }
+
+        /* Central content area */
+        .content {
+            margin-top: 150px;
+            text-align: center;
+        }
+
+        /* Main heading style */
+        h1 {
+            color: #ffdd57;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 40px;
+        }
+
+        /* Button styling */
+        button {
+            padding: 15px 30px;
+            margin: 15px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-3px);
+        }
+
+        /* Link button for student enrollment */
+        a button {
+            background-color: #ffdd57;
+            color: #121212;
+        }
+
+        a button:hover {
+            background-color: #e6c93d;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Logout button positioned at the top-right -->
+    <a href="logout" class="logout-button">Logout</a>
+
+    <div class="container content">
+        <h1>What do you want to do?</h1>
+        <button onclick="window.location.href='/admin/'">Go to Django Admin</button>
+        <a href="{% url 'admin_view' %}">
+            <button>View Student Enrollment</button>
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

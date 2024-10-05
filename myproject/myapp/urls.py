@@ -11,5 +11,7 @@ urlpatterns = [
     path('enroll',views.enroll),
     path('result',views.result),
     path('withdraw',views.withdraw),
-    path('change_password/', views.change_password, name='change_password')
+    path('change_password/', views.change_password, name='change_password'),
+    path('admindecide',views.admindecide),
+    path('adminview/', views.admin_view, name='admin_view')
 ]

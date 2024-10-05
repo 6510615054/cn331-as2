@@ -1,9 +1,10 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from myapp.models import Student,Subject
+from myapp.models import Student,Subject,Regis
 from django.contrib import messages
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password
+from django.db.models import Q 
 import json
 
 # Create your views here.
@@ -19,7 +20,7 @@ def login(request):
 
         # Special case for admin login
         if (sID == 'admin') and (idCard == 'admin'):
-            return redirect('/admin')
+            return redirect('/admindecide')
 
         try:
             student = Student.objects.get(sID=sID)
@@ -129,3 +130,23 @@ def change_password(request):
         except json.JSONDecodeError:
             return JsonResponse({'success': False, 'error': 'Invalid JSON'})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+def admindecide(request):
+    return render(request,'admindecide.html')
+
+def admin_view(request):
+    query = request.GET.get('query', '')
+    students = Student.objects.all()
+
+    if query:
+        # Filtering students based on the search query
+        students = students.filter(
+            Q(sID__icontains=query) |  # Search by Student ID
+            Q(fname__icontains=query) |  # Search by First Name
+            Q(lname__icontains=query)    # Search by Last Name
+        ).distinct()
+
+    context = {
+        'students': students,
+    }
+    return render(request, 'adminview.html', context)

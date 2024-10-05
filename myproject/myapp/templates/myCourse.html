@@ -20,13 +20,13 @@
 
 </div>
 {% endfor %}
-<a href="enrollSubmit/{{Student.sID}}" class="btn btn-success">Enroll</a>
-<a href="/enroll" class="btn btn-success">Back</a>
+<a style="margin-bottom: 20px;" href="enrollSubmit/{{Student.sID}}" class="btn btn-success">Enroll</a>
+<a style="margin-bottom: 20px;" href="/enroll" class="btn btn-success">Back</a>
 {% else %}
 <div class="alert alert-danger" role="alert">
     No Subject Available!
 </div>
-<a href="/enroll" class="btn btn-success">Back</a>
+<a style="margin-bottom: 20px;" href="/enroll" class="btn btn-success">Back</a>
 {% endif %}
 
 {% endblock %}

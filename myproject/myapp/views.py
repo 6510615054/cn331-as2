@@ -113,8 +113,8 @@ def result(request):
 
 def withdraw(request):
     student = Student.objects.get(sID=request.session.get('student_id'))
-    subjects = Subject.objects.all()
-    return render(request,'withdraw.html',{'Student':student, "Subject":subjects})
+    data = Register.objects.filter(sID=student.sID)
+    return render(request,'withdraw.html',{'data':data,'Student':student})
 
 def add(request, student_id, subject_id):
     if request.method == 'GET':
@@ -185,3 +185,19 @@ def enrollSubmit(request, student_id):
         return redirect('/homepage')
 
     return redirect('/myCourse')
+
+
+def withdrawal(request, student_id, subject_id):
+    if request.method == 'GET':
+
+        regis = Register.objects.get(sjID=subject_id,sID= student_id)
+        subject = Subject.objects.get(sjID=subject_id)
+
+        subject.isPicked = False
+        subject.seatAva += 1
+        subject.save()
+
+        regis.delete()
+        messages.success(request,'ถอนรายวิชาสำเร็จ')
+
+    return redirect('/homepage')

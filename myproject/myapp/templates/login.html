@@ -7,34 +7,60 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>Login</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'myapp/login.css' %}">
+
 </head>
 
 <body>
+
+    <audio id="background-music" autoplay loop>
+        <source src="{% static 'myapp/Filo Starquez - Divergence.wav' %}" type="audio/wav">
+        Your browser does not support the audio element. Please check your audio settings.
+    </audio>
+    
+    
+
     <div class="container mt-5">
+
+        <div class="text-center">
+            <img src="{% static 'myapp\dance-anime.gif' %}" alt="Loading..." class="img-fluid">
+        </div>
+
         <h1 class="text-center mt-3">CN331 PROJECT</h1>
+
+        <!-- Message alert -->
         {% if messages %}
-        {% for message in messages%}
+        {% for message in messages %}
         <div class="alert alert-success" role="alert">
-            <strong>{{message}}</strong>
+            <strong>{{ message }}</strong>
         </div>
         {% endfor %}
         {% endif %}
+
+        <!-- Login form -->
         <form method="post">
             {% csrf_token %}
             <div class="mb-3">
                 <label for="username" class="form-label">Student ID</label>
-                <input type="text" name="sID" class="form-control">
+                <input type="text" name="sID" class="form-control" required>
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label">Citizen ID</label>
-                <input type="password" name="idCard" class="form-control">
+                <label for="password" class="form-label">Password (ID card by default)</label>
+                <input type="password" name="idCard" class="form-control" required>
             </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-            <a href="register" class="ms-2">Register</a>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+            <a href="register" class="d-block text-center mt-2">Register</a>
         </form>
     </div>
 
+   
+    
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

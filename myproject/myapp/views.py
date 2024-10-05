@@ -1,10 +1,18 @@
-from django.shortcuts import render,redirect
-from myapp.models import Student,Subject,Register,TempRegister
+from django.shortcuts import render,redirect,get_object_or_404
+from myapp.models import Student,Subject,Regis,Register,TempRegister
 from django.contrib import messages
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.hashers import make_password
+from django.db.models import Q 
+import json
 
 # Create your views here.
-def login(request):
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from myapp.models import Student
 
+def login(request):
     if request.method == 'POST':
         # รับข้อมูล
         sID = request.POST["sID"]
@@ -16,36 +24,20 @@ def login(request):
         try:
             student = Student.objects.get(sID=sID, idCard=idCard)
 
-            # ถ้ามีข้อมูลการลงทะเบียนจะไม่แสดงวิชา
-            if Register.objects.filter(sID=student.sID).exists():
-                registers = Register.objects.filter(sID=student.sID)
-
-                for reg in registers:
-                    subject = Subject.objects.get(sjID=reg.sjID)
-                    subject.isPicked = True
-                    subject.save() 
-
-                subjects = Subject.objects.exclude(sjID__in=registers.values_list('sjID', flat=True))
-                for subject in subjects:
-                    subject.isPicked = False
-                    subject.save()
+            # Check if the idCard matches the stored password
+            if student.idCard == idCard:  # Direct comparison
+                # เก็บค่า sID เพื่อไปแสดงผลหน้าอื่นด้วย
+                request.session['student_id'] = student.sID
+                return render(request, 'index.html', {'Student': student})
             else:
-                subjects = Subject.objects.all()
-                for subject in subjects:
-                    subject.isPicked = False
-                    subject.save() 
-
-
-            # เก็บค่า sID เพื่อไปแสดงผลหน้าอื่นด้วย
-            request.session['student_id'] = student.sID
-        
-            return render(request, 'index.html',{'Student':student})
+                messages.error(request, "รหัสนักศึกษาหรือบัตรประชาชนไม่ถูกต้อง!")  # Incorrect password
 
         except Student.DoesNotExist:
             # ถ้าไม่พบผู้ใช้ ให้แสดงข้อความผิดพลาด
             messages.error(request, "รหัสนักศึกษาหรือบัตรประชาชนไม่ถูกต้อง!")
 
     return render(request, 'login.html')
+
 
 def register(request):
      
@@ -143,6 +135,48 @@ def myCourse(request):
     student = Student.objects.get(sID=request.session.get('student_id'))
     subjects = TempRegister.objects.filter(sID=request.session.get('student_id'))
     return render(request,'myCourse.html',{'Student':student,"subjects":subjects})
+
+def change_password(request):
+    if request.method == 'POST':
+        # Ensure the request body is JSON
+        try:
+            data = json.loads(request.body)
+            student_id = data.get('id')
+            new_password = data.get('new_password')
+
+            # Get the student object using the student ID
+            student = Student.objects.get(sID=student_id)
+            
+            # Set the new password
+            student.idCard = new_password  # Assuming you want to store the new password in idCard
+            student.save()  # Save the changes to the database
+            
+            return JsonResponse({'success': True})
+        except Student.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Student not found'})
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON'})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+def admindecide(request):
+    return render(request,'admindecide.html')
+
+def admin_view(request):
+    query = request.GET.get('query', '')
+    students = Student.objects.all()
+
+    if query:
+        # Filtering students based on the search query
+        students = students.filter(
+            Q(sID__icontains=query) |  # Search by Student ID
+            Q(fname__icontains=query) |  # Search by First Name
+            Q(lname__icontains=query)    # Search by Last Name
+        ).distinct()
+
+    context = {
+        'students': students,
+    }
+    return render(request, 'adminview.html', context)
 
 def delete(request, student_id, subject_id):
     if request.method == 'GET':

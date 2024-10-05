@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from myapp.models import Student,Subject,Regis,Register,TempRegister
+from myapp.models import Student,Subject,Register,TempRegister
 from django.contrib import messages
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt

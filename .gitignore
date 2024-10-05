@@ -2,3 +2,4 @@ __pycache__/
 /myapp/migrations/__pycache__/
 /myproject/__pycache__/
 /myproject/myapp/__pycache__/
+/myproject/db.sqlite3

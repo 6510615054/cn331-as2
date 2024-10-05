@@ -16,7 +16,8 @@
     </div>
     <form method="post">
         {% csrf_token %}
-        <a href="withdrawal/{{subject.sID}}/{{subject.sjID}}" class="btn btn-warning">Withdraw</a>
+        <a onclick="return confirm('คุณต้องการถอนวิชา {{subject.sName}} หรือไม่')"
+            href="withdrawal/{{subject.sID}}/{{subject.sjID}}" class="btn btn-warning">Withdraw</a>
     </form>
 </div>
 {% endfor %}

@@ -5,9 +5,15 @@
 <title>Registration Result</title>
 {% endblock %}
 
+
 {% block content %}
-<div>
-    <h2>This is result page</h2>
+{% for subject in data %}
+<div class="alert alert-secondary d-flex align-items-center justify-content-between">
+    <div>
+        <p class="text-uppercase fs-5 fw-bold d-inline mb-0">{{subject.sjID}}</p>
+        <p class="text-uppercase fs-5 d-inline mb-0">{{subject.sName}}</p>
+    </div>
 </div>
+{% endfor %}
 
 {% endblock %}

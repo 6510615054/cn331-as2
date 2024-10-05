@@ -107,9 +107,14 @@ def enroll(request):
     return render(request,'enroll.html',{'Student':student, "Subject":subjects})
 
 def result(request):
-    student = Student.objects.get(sID=request.session.get('student_id'))
-    subjects = Subject.objects.all()
-    return render(request,'result.html',{'Student':student, "Subject":subjects})
+    
+    try:
+        student = Student.objects.get(sID=request.session.get('student_id'))
+        data = Register.objects.filter(sID=request.session.get('student_id'))
+        return render(request,'result.html',{'data':data,'Student':student})
+    except Register.DoesNotExist:
+        # ถ้าหากไม่พบข้อมูลใน Register ให้ redirect
+        return redirect('/homepage')
 
 def withdraw(request):
     student = Student.objects.get(sID=request.session.get('student_id'))

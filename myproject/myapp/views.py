@@ -24,6 +24,11 @@ def login(request):
                     subject = Subject.objects.get(sjID=reg.sjID)
                     subject.isPicked = True
                     subject.save() 
+
+                subjects = Subject.objects.exclude(sjID__in=registers.values_list('sjID', flat=True))
+                for subject in subjects:
+                    subject.isPicked = False
+                    subject.save()
             else:
                 subjects = Subject.objects.all()
                 for subject in subjects:

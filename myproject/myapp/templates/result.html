@@ -7,6 +7,7 @@
 
 
 {% block content %}
+{% if data %}
 {% for subject in data %}
 <div class="alert alert-secondary d-flex align-items-center justify-content-between">
     <div>
@@ -15,5 +16,11 @@
     </div>
 </div>
 {% endfor %}
+{% else %}
+<div class="alert alert-danger" role="alert">
+    ไม่พบข้อมูลการลงทะเบียน
+</div>
+{% endif %}
+
 
 {% endblock %}

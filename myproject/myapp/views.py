@@ -19,7 +19,7 @@ def login(request):
         idCard = request.POST["idCard"]
 
         if((sID == 'admin') and (idCard == 'admin')):
-            return redirect('/admin')
+            return redirect('/admindecide')
         
         try:
             student = Student.objects.get(sID=sID, idCard=idCard)

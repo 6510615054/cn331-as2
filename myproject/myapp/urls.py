@@ -16,4 +16,8 @@ urlpatterns = [
     path('delete/<student_id>/<subject_id>', views.delete),
     path('enrollSubmit/<student_id>', views.enrollSubmit),
     path('withdrawal/<student_id>/<subject_id>', views.withdrawal),
+    path('withdraw',views.withdraw),
+    path('change_password/', views.change_password, name='change_password'),
+    path('admindecide',views.admindecide),
+    path('adminview/', views.admin_view, name='admin_view')
 ]

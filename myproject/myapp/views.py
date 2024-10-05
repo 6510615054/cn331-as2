@@ -16,9 +16,24 @@ def login(request):
         try:
             student = Student.objects.get(sID=sID, idCard=idCard)
 
+            # ถ้ามีข้อมูลการลงทะเบียนจะไม่แสดงวิชา
+            if Register.objects.filter(sID=student.sID).exists():
+                registers = Register.objects.filter(sID=student.sID)
+
+                for reg in registers:
+                    subject = Subject.objects.get(sjID=reg.sjID)
+                    subject.isPicked = True
+                    subject.save() 
+            else:
+                subjects = Subject.objects.all()
+                for subject in subjects:
+                    subject.isPicked = False
+                    subject.save() 
+
+
             # เก็บค่า sID เพื่อไปแสดงผลหน้าอื่นด้วย
             request.session['student_id'] = student.sID
-
+        
             return render(request, 'index.html',{'Student':student})
 
         except Student.DoesNotExist:
@@ -103,6 +118,8 @@ def add(request, student_id, subject_id):
         subject = Subject.objects.get(sjID=subject_id)
 
         temp_newRegis = TempRegister.objects.create(
+            student=student,
+            subject=subject,
             fname = student.fname,
             lname = student.lname,
             sID = student.sID,
@@ -150,6 +167,12 @@ def enrollSubmit(request, student_id):
                 sName=item.sName
             )
 
+            subject = Subject.objects.get(sjID=item.sjID)
+
+            if subject.seatAva > 0:
+                subject.seatAva -= 1
+            
+            subject.save()
             new_regis.save()
 
         regis.delete()

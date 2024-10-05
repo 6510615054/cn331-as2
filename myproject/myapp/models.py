@@ -22,11 +22,15 @@ class Subject(models.Model):
     eduYear = models.IntegerField()
     maxSeat = models.IntegerField()
     seatAva = models.IntegerField()
-    status = models.BooleanField(default=True)
+    status = models.BooleanField()
     isPicked = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.sjID) + " " + self.sName
+    
+    def save(self, *args, **kwargs):
+        self.status = self.seatAva > 0
+        super().save(*args, **kwargs)
 
 class Register(models.Model):
     fname = models.CharField(max_length=100)
@@ -39,6 +43,8 @@ class Register(models.Model):
         return str(self.sjID) + " " + str(self.sID)
 
 class TempRegister(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     fname = models.CharField(max_length=100)
     lname = models.CharField(max_length=100)
     sID = models.CharField(max_length=100)

@@ -7,78 +7,27 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>Login</title>
-    <style>
-        body {
-            background-color: #121212; /* Dark background */
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
 
-        .container {
-            max-width: 500px;
-            margin: auto;
-            background-color: #1f1f1f;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'myapp/login.css' %}">
 
-        h1 {
-            color: #ffdd57; /* Soft yellow heading for contrast */
-            font-weight: 600;
-            font-size: 2rem;
-        }
-
-        label {
-            color: #cccccc; /* Lighter label color */
-        }
-
-        .form-control {
-            background-color: #2c2c2c;
-            color: white;
-            border: 1px solid #444;
-        }
-
-        .form-control:focus {
-            background-color: #333333;
-            color: white;
-            border-color: #ffdd57;
-            box-shadow: none;
-        }
-
-        .btn-primary {
-            background-color: #ffdd57;
-            border: none;
-            color: #121212;
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background-color: #e6c93d;
-        }
-
-        a {
-            color: #ffdd57;
-        }
-
-        a:hover {
-            color: #e6c93d;
-        }
-
-        .alert {
-            background-color: #343a40;
-            color: #ffdd57;
-            border: none;
-            border-radius: 5px;
-        }
-
-    </style>
 </head>
 
 <body>
+
+    <audio id="background-music" autoplay loop>
+        <source src="{% static 'myapp/Filo Starquez - Divergence.wav' %}" type="audio/wav">
+        Your browser does not support the audio element. Please check your audio settings.
+    </audio>
+    
+    
+
     <div class="container mt-5">
+
+        <div class="text-center">
+            <img src="{% static 'myapp\dance-anime.gif' %}" alt="Loading..." class="img-fluid">
+        </div>
+
         <h1 class="text-center mt-3">CN331 PROJECT</h1>
 
         <!-- Message alert -->
@@ -107,6 +56,9 @@
             <a href="register" class="d-block text-center mt-2">Register</a>
         </form>
     </div>
+
+   
+    
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

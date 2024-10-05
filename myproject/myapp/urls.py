@@ -10,5 +10,6 @@ urlpatterns = [
     path('viewCourse',views.viewCourse),
     path('enroll',views.enroll),
     path('result',views.result),
-    path('withdraw',views.withdraw)
+    path('withdraw',views.withdraw),
+    path('change_password/', views.change_password, name='change_password')
 ]

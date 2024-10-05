@@ -1,31 +1,43 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from myapp.models import Student,Subject
 from django.contrib import messages
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.hashers import make_password
+import json
 
 # Create your views here.
-def login(request):
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from myapp.models import Student
 
+def login(request):
     if request.method == 'POST':
         # รับข้อมูล
         sID = request.POST["sID"]
         idCard = request.POST["idCard"]
 
-        if((sID == 'admin') and (idCard == 'admin')):
+        # Special case for admin login
+        if (sID == 'admin') and (idCard == 'admin'):
             return redirect('/admin')
-        
+
         try:
-            student = Student.objects.get(sID=sID, idCard=idCard)
+            student = Student.objects.get(sID=sID)
 
-            # เก็บค่า sID เพื่อไปแสดงผลหน้าอื่นด้วย
-            request.session['student_id'] = student.sID
-
-            return render(request, 'index.html',{'Student':student})
+            # Check if the idCard matches the stored password
+            if student.idCard == idCard:  # Direct comparison
+                # เก็บค่า sID เพื่อไปแสดงผลหน้าอื่นด้วย
+                request.session['student_id'] = student.sID
+                return render(request, 'index.html', {'Student': student})
+            else:
+                messages.error(request, "รหัสนักศึกษาหรือบัตรประชาชนไม่ถูกต้อง!")  # Incorrect password
 
         except Student.DoesNotExist:
             # ถ้าไม่พบผู้ใช้ ให้แสดงข้อความผิดพลาด
             messages.error(request, "รหัสนักศึกษาหรือบัตรประชาชนไม่ถูกต้อง!")
 
     return render(request, 'login.html')
+
 
 def register(request):
      
@@ -95,3 +107,25 @@ def withdraw(request):
     student = Student.objects.get(sID=request.session.get('student_id'))
     subjects = Subject.objects.all()
     return render(request,'withdraw.html',{'Student':student, "Subject":subjects})
+
+def change_password(request):
+    if request.method == 'POST':
+        # Ensure the request body is JSON
+        try:
+            data = json.loads(request.body)
+            student_id = data.get('id')
+            new_password = data.get('new_password')
+
+            # Get the student object using the student ID
+            student = Student.objects.get(sID=student_id)
+            
+            # Set the new password
+            student.idCard = new_password  # Assuming you want to store the new password in idCard
+            student.save()  # Save the changes to the database
+            
+            return JsonResponse({'success': True})
+        except Student.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Student not found'})
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON'})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})

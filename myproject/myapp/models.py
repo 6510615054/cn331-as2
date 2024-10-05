@@ -20,13 +20,27 @@ class Subject(models.Model):
     sName = models.CharField(max_length=100)
     eduSec = models.CharField(max_length=1)
     eduYear = models.IntegerField()
+    maxSeat = models.IntegerField()
     seatAva = models.IntegerField()
-    status = models.BooleanField()
+    status = models.BooleanField(default=True)
+    isPicked = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.sjID) + " " + self.sName
 
-class Regis(models.Model):
-    Student.sID
-    Subject.sjID
-    
+class Register(models.Model):
+    fname = models.CharField(max_length=100)
+    lname = models.CharField(max_length=100)
+    sID = models.CharField(max_length=100)
+    sjID = models.CharField(max_length=10)
+    sName = models.CharField(max_length=100)
+
+    def __str__(self):
+        return str(self.sjID) + " " + str(self.sID)
+
+class TempRegister(models.Model):
+    fname = models.CharField(max_length=100)
+    lname = models.CharField(max_length=100)
+    sID = models.CharField(max_length=100)
+    sjID = models.CharField(max_length=10)
+    sName = models.CharField(max_length=100)

@@ -6,8 +6,8 @@
 {% endblock %}
 
 {% block content %}
-{% for subject in Subject %}
-{% if subject.status and not subject.isPicked %}
+{% if subjects %}
+{% for subject in subjects %}
 <div class="alert alert-secondary d-flex align-items-center justify-content-between">
     <div>
         <p class="text-uppercase fs-5 fw-bold d-inline mb-0">{{subject.sjID}}</p>
@@ -15,12 +15,18 @@
     </div>
     <form method="post">
         {% csrf_token %}
-        <a href="add/{{Student.sID}}/{{subject.sjID}}" class="btn btn-outline-danger">Add</a>
+        <a href="delete/{{Student.sID}}/{{subject.sjID}}" class="btn btn-outline-danger">Delete</a>
     </form>
 
 </div>
-{% endif %}
 {% endfor %}
-<a href="myCourse" class="btn btn-success">My Course</a>
+<a href="enrollSubmit/{{Student.sID}}" class="btn btn-success">Enroll</a>
+<a href="/enroll" class="btn btn-success">Back</a>
+{% else %}
+<div class="alert alert-danger" role="alert">
+    No Subject Available!
+</div>
+<a href="/enroll" class="btn btn-success">Back</a>
+{% endif %}
 
 {% endblock %}

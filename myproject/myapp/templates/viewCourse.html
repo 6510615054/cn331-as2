@@ -23,11 +23,11 @@
     <tbody>
         {% for subject in Subject %}
         <tr>
-            <th scope="row">{{subject.sjID}}</th>
-            <td>{{subject.sName}}</td>
+            <th scope="row">{{subject.sjID | upper}}</th>
+            <td>{{subject.sName | upper}}</td>
             <td>{{subject.eduSec}}</td>
             <td>{{subject.eduYear}}</td>
-            <td>{{subject.seatAva}}</td>
+            <td>{{subject.maxSeat}}</td>
             <td>{{subject.seatAva}}</td>
             <td> {% if subject.status %}
                 Available

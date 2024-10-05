@@ -7,6 +7,13 @@
 
 {% block content %}
 <div>
+    {% if messages %}
+    {% for message in messages%}
+    <div class="alert alert-success" role="alert">
+        <strong>{{message}}</strong>
+    </div>
+    {% endfor %}
+    {% endif %}
     <h2>Hello {{Student.fname | upper}}</h2>
 </div>
 

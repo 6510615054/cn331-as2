@@ -10,5 +10,9 @@ urlpatterns = [
     path('viewCourse',views.viewCourse),
     path('enroll',views.enroll),
     path('result',views.result),
-    path('withdraw',views.withdraw)
+    path('withdraw',views.withdraw),
+    path('add/<student_id>/<subject_id>', views.add),
+    path('myCourse',views.myCourse),
+    path('delete/<student_id>/<subject_id>', views.delete),
+    path('enrollSubmit/<student_id>', views.enrollSubmit),
 ]

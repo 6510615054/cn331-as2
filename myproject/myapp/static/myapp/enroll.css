@@ -1,0 +1,21 @@
+/* Styles for the enrollment box */
+.box {
+    background-color: black !important;  /* Change background to black */
+    color: white !important;             /* Change font color to white */
+}
+
+/* Optional: if you want to ensure any link colors are also white */
+.box a {
+    color: white;             /* Change link color to white */
+}
+
+/* Optional: if you want to change the button color for better visibility */
+.box .btn-outline-danger {
+    border-color: white;      /* Change border color to white */
+    color: white;             /* Change text color to white */
+}
+
+.box .btn-outline-danger:hover {
+    background-color: white;  /* Change background on hover */
+    color: black;             /* Change text color on hover */
+}

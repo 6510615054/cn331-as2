@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load static %}
+    <link rel="stylesheet" href="{% static 'myapp/enroll.css' %}">
 
 
 {% block tile %}
@@ -8,19 +10,21 @@
 {% block content %}
 {% for subject in Subject %}
 {% if subject.status and not subject.isPicked %}
-<div class="alert alert-secondary d-flex align-items-center justify-content-between">
+<div class="box alert alert-secondary d-flex align-items-center justify-content-between" style="background-color: #1f1f1f; color: #ccc;">
+
     <div>
         <p class="text-uppercase fs-5 fw-bold d-inline mb-0">{{subject.sjID}}</p>
         <p class="text-uppercase fs-5 d-inline mb-0">{{subject.sName}}</p>
     </div>
     <form method="post">
         {% csrf_token %}
-        <a href="add/{{Student.sID}}/{{subject.sjID}}" class="btn btn-outline-danger">Add</a>
+        <a href="add/{{Student.sID}}/{{subject.sjID}}" class="btn btn-outline-danger" style=" border-color:#ccc; color:white;">Add</a>
     </form>
 
 </div>
 {% endif %}
 {% endfor %}
-<a style="margin-bottom: 20px;" href="myCourse" class="btn btn-success">My Course</a>
+    <a style="margin-bottom: 20px; margin-left: 8px;" href="myCourse" class="btn btn-success mt-2">My Course</a>
+
 
 {% endblock %}

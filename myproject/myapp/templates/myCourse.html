@@ -8,7 +8,7 @@
 {% block content %}
 {% if subjects %}
 {% for subject in subjects %}
-<div class="alert alert-secondary d-flex align-items-center justify-content-between">
+<div class="box alert alert-secondary d-flex align-items-center justify-content-between" style="background-color: #1f1f1f; color: #ccc;">
     <div>
         <p class="text-uppercase fs-5 fw-bold d-inline mb-0">{{subject.sjID}}</p>
         <p class="text-uppercase fs-5 d-inline mb-0">{{subject.sName}}</p>
@@ -20,13 +20,13 @@
 
 </div>
 {% endfor %}
-<a style="margin-bottom: 20px;" href="enrollSubmit/{{Student.sID}}" class="btn btn-success">Enroll</a>
+<a style="margin-bottom: 20px; margin-right: 8px; margin-left: 8px;" href="enrollSubmit/{{Student.sID}}" class="btn btn-success">Enroll</a>
 <a style="margin-bottom: 20px;" href="/enroll" class="btn btn-success">Back</a>
 {% else %}
 <div class="alert alert-danger" role="alert">
     No Subject Available!
 </div>
-<a style="margin-bottom: 20px;" href="/enroll" class="btn btn-success">Back</a>
+<a style="margin-bottom: 20px; margin-left: 8px;" href="/enroll" class="btn btn-success">Back</a>
 {% endif %}
 
 {% endblock %}

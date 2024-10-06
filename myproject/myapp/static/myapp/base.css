@@ -57,7 +57,7 @@ button:hover {
 
 .navbar .navbar-brand:hover,
 .navbar .nav-link:hover {
-  background-color: #6de8dc !important;
+  color: white !important;
 }
 
 hr {

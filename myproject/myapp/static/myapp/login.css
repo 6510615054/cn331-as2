@@ -14,8 +14,8 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-h1 {
-    color: #eeeeee;
+h2 {
+    color: #ffdd57;
     /* Soft yellow heading for contrast */
     font-weight: 600;
     font-size: 2rem;

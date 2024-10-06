@@ -162,20 +162,20 @@ def admindecide(request):
     return render(request,'admindecide.html')
 
 def admin_view(request):
-    query = request.GET.get('query', '')
-    students = Student.objects.all()
+    subjects = Subject.objects.all()  # Fetch all subjects
+    students = []
 
-    if query:
-        # Filtering students based on the search query
-        students = students.filter(
-            Q(sID__icontains=query) |  # Search by Student ID
-            Q(fname__icontains=query) |  # Search by First Name
-            Q(lname__icontains=query)    # Search by Last Name
-        ).distinct()
+    if request.method == 'GET':
+        subject_id = request.GET.get('subject')
+        if subject_id:
+            # Filter Register to get students for the selected subject
+            students = Register.objects.filter(sjID=subject_id)  # Change to Register
 
     context = {
+        'subjects': subjects,
         'students': students,
     }
+    
     return render(request, 'adminview.html', context)
 
 def delete(request, student_id, subject_id):

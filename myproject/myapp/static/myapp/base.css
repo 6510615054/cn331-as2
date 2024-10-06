@@ -9,13 +9,19 @@ a {
   color: #1e90ff;
 }
 
-header, footer {
+header,
+footer {
   background-color: #555555;
   padding: 20px;
   text-align: center;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: #ffffff;
 }
 
@@ -36,23 +42,25 @@ button:hover {
 }
 
 .navbar {
-    background-color: #eada2e; /* Navbar background color */
-    border-radius: 10px;
-    color: rgb(0, 0, 0);
-    padding-left: 20px;
+  background-color: #ffdd57;
+  /* Navbar background color */
+  border-radius: 10px;
+  color: rgb(0, 0, 0);
+  padding-left: 20px;
 }
 
-.navbar .navbar-brand, 
+.navbar .navbar-brand,
 .navbar .nav-link {
-    color: black !important; /* Navbar link color */
+  color: black !important;
+  /* Navbar link color */
 }
 
 .navbar .navbar-brand:hover,
 .navbar .nav-link:hover {
-    background-color: #6de8dc !important;
+  background-color: #6de8dc !important;
 }
 
 hr {
-    border-top: 1px solid #decf69; /* Lighter divider */
+  border-top: 1px solid #decf69;
+  /* Lighter divider */
 }
-

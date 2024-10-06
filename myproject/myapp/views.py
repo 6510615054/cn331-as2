@@ -28,6 +28,25 @@ def login(request):
             if student.idCard == idCard:  # Direct comparison
                 # เก็บค่า sID เพื่อไปแสดงผลหน้าอื่นด้วย
                 request.session['student_id'] = student.sID
+
+                # ตรวจสอบการลงทะเบียนใน Register model
+                if Register.objects.filter(sID=student.sID).exists():
+                    # มีการลงทะเบียนแล้ว
+                    registers = Register.objects.filter(sID=student.sID)
+                    
+                    # อัปเดตค่า isPicked ใน Subject ให้เป็น True
+                    for reg in registers:
+                        subject = Subject.objects.get(sjID=reg.sjID)
+                        subject.isPicked = True
+                        subject.save()
+                        
+                else:
+                    # ไม่มีการลงทะเบียน อัปเดต isPicked ของทุกวิชาให้เป็น False
+                    subjects = Subject.objects.all()
+                    for subject in subjects:
+                        subject.isPicked = False
+                        subject.save()
+                
                 return render(request, 'index.html', {'Student': student})
             else:
                 messages.error(request, "รหัสนักศึกษาหรือบัตรประชาชนไม่ถูกต้อง!")  # Incorrect password

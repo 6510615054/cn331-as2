@@ -101,7 +101,7 @@ class PageViewTest(TestCase):
             faculty="Arts",
             department="History"
         )
-        self.client.post(reverse("login"), {"sID": "654321", "idCard": "B1234567890123"})
+        self.client.post(reverse("login"), {"sID": self.student.sID, "idCard": self.student.idCard})
 
     def test_register_view_get(self):
         response = self.client.get(reverse("register"))
@@ -173,7 +173,7 @@ class EnrollSubjectTest(TestCase):
             status=True
         )
         
-        self.client.post(reverse("login"), {"sID": "123456", "idCard": "A1234567890123"})
+        self.client.post(reverse("login"), {"sID": self.student.sID, "idCard": self.student.idCard})
 
     def test_add_subjects(self):
 

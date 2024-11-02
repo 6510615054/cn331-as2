@@ -25,6 +25,16 @@ class LoginViewTest(TestCase):
             department="admin"
         )
 
+        self.subject = Subject.objects.create(
+            sjID="PHY101",
+            sName="Physics",
+            eduSec="A",
+            eduYear=1,
+            maxSeat=30,
+            seatAva=10,
+            status=True
+        )
+
     def test_login_success_client(self):
         response = self.client.post(reverse("login"), {
             "sID": self.student.sID,
@@ -42,23 +52,26 @@ class LoginViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "login.html")
 
-        # Get the messages from the response
         messages = list(get_messages(response.wsgi_request))
-
-        # Check that the expected error message is in the messages
-        self.assertTrue(any(msg.message == "รหัสนักศึกษาหรือบัตรประชาชนไม่ถูกต้อง!" for msg in messages))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "รหัสนักศึกษาหรือบัตรประชาชนไม่ถูกต้อง!") 
 
     def test_login_success_admin(self):
+        EnrollSubjectTest.add_enroll_subjects(self)
+
         response = self.client.post(reverse("login"), {
-            "sID": "admin",
-            "idCard": "admin"
+            "sID": self.admin.sID,
+            "idCard": self.admin.idCard
         })
+
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/admindecide")
 
-        response_admin_views = self.client.post(reverse("admin_view"))
+        response_admin_views = self.client.get(reverse("admin_view"))
         self.assertEqual(response_admin_views.status_code, 200)
         self.assertTemplateUsed(response_admin_views, "adminview.html")
+        self.assertTrue(Register.objects.filter(sjID=self.subject.sjID).exists())
+        
 
 class RegisterViewTest(TestCase):
     def setUp(self):
@@ -267,3 +280,36 @@ class ChangePasswordTest(TestCase):
         self.student.refresh_from_db()
         self.assertEqual(self.student.idCard, "new_password123")
 
+    def test_get_method(self):
+        response = self.client.get(reverse("change_password"))
+
+        messages = response.json()
+        expected_data = {'success': False, 'error': 'Invalid request method'}
+        self.assertEqual(messages, expected_data)
+
+    def test_failure_change_password(self):
+        response = self.client.post(reverse("change_password"), data=json.dumps({
+            "id": "123455", # id  does not exist
+            "new_password": "new_password123"
+        }), content_type="application/json")
+
+        messages = response.json()
+        expected_data = {'success': False, 'error': 'Student not found'}
+        self.assertEqual(messages, expected_data)
+
+    def test_invalid_json_data(self):
+        # Prepare an invalid JSON string (missing quotes or brackets, for example)
+        invalid_json = "{'invalid': 'json}"
+
+        # Make a POST request with invalid JSON
+        response = self.client.post(
+            reverse("change_password"),
+            data=invalid_json,
+            content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        messages = response.json()
+        expected_error = {'success': False, 'error': 'Invalid JSON'}
+        self.assertEqual(messages, expected_error)

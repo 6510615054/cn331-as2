@@ -1,6 +1,5 @@
-from django.test import TestCase, Client
-from .models import Student, Subject, Register, TempRegister
-import json
+from django.test import TestCase
+from .models import Student, Subject, Register
 
 class StudentModelTest(TestCase):
     def setUp(self):

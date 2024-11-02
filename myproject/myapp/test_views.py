@@ -53,6 +53,7 @@ class LoginViewTest(TestCase):
         self.assertTemplateUsed(response, "login.html")
 
         messages = list(get_messages(response.wsgi_request))
+        print(messages)
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), "รหัสนักศึกษาหรือบัตรประชาชนไม่ถูกต้อง!") 
 

@@ -185,8 +185,8 @@ class EnrollSubjectTest(TestCase):
         self.assertRedirects(response_add, "/enroll")
 
     def test_enroll_subjects(self):
-
-        EnrollSubjectTest.test_add_subjects(self)
+        
+        self.test_add_subjects()
         initial_seatAva = self.subject.seatAva
         # test enroll subjects
         response_enroll_1 = self.client.post(reverse("enroll_submit", args=[self.student.sID]))
@@ -202,11 +202,15 @@ class EnrollSubjectTest(TestCase):
         self.assertEqual(response_enroll_2.status_code, 302)  
         self.assertRedirects(response_enroll_2,'/homepage')
 
+    def add_enroll_subjects(self):
+        self.client.get(reverse("add_subject", args=[self.student.sID,self.subject.sjID]))
+        self.client.get(reverse("enroll_submit", args=[self.student.sID]))
+        self.subject.refresh_from_db()
+
+
     def test_withdraw_subjects(self):
         
-        EnrollSubjectTest.test_add_subjects(self)
-        EnrollSubjectTest.test_enroll_subjects(self)
-        # test withdraw subjects
+        self.add_enroll_subjects()
         after_enroll_seatAva = self.subject.seatAva
 
         response_withdraw = self.client.get(reverse("withdraw_subject", args=[self.student.sID,self.subject.sjID]))
@@ -219,9 +223,8 @@ class EnrollSubjectTest(TestCase):
         self.assertRedirects(response_withdraw,'/homepage')
 
     def test_login_again(self):
-        # test for field isPicked is updated
-        EnrollSubjectTest.test_add_subjects(self)
-        EnrollSubjectTest.test_enroll_subjects(self)
+        
+        self.add_enroll_subjects() 
 
         self.client.get(reverse("logout"))
         self.client.post(reverse("login"), {"sID": self.student.sID, "idCard": self.student.idCard})
@@ -231,6 +234,23 @@ class EnrollSubjectTest(TestCase):
             subject = Subject.objects.get(sjID=reg.sjID) 
             self.assertTrue(subject.isPicked == True)
 
+
+    def test_delete_form_add_subjects(self):
+        self.test_add_subjects()
+
+        response = self.client.post(reverse("delete_subject",args=[self.student.sID,self.subject.sjID]))
+        self.assertEqual(response.status_code,302)
+        self.assertRedirects(response,'/myCourse')
+
+        response = self.client.get(reverse("delete_subject",args=[self.student.sID,self.subject.sjID]))
+        registers = TempRegister.objects.filter(sID=self.student.sID,sjID= self.subject.sjID) 
+
+        self.assertFalse(registers.exists())  
+        for register in registers:
+            subject = Subject.objects.get(sjID=register.sjID) 
+            self.assertTrue(subject.isPicked == False)
+        # self.assertEqual(response.status_code,302)
+        # self.assertRedirects('/myCourse')
 
 class ChangePasswordTest(TestCase):
     def setUp(self):

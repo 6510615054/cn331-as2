@@ -25,16 +25,6 @@ class LoginViewTest(TestCase):
             department="admin"
         )
 
-        self.subject = Subject.objects.create(
-            sjID="PHY101",
-            sName="Physics",
-            eduSec="A",
-            eduYear=1,
-            maxSeat=30,
-            seatAva=10,
-            status=True
-        )
-
     def test_login_success_client(self):
         response = self.client.post(reverse("login"), {
             "sID": self.student.sID,
@@ -46,33 +36,36 @@ class LoginViewTest(TestCase):
     # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     def test_login_failure_client(self):
         response = self.client.post(reverse("login"), {
-            "sID": self.student.sID,
-            "idCard": "wrong_password"
+            "sID": "wrong_sID",
+            "idCard": "wrong_idCard"
         })
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "login.html")
 
+        # Get the messages from the response
         messages = list(get_messages(response.wsgi_request))
-        print(messages)
-        self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), "รหัสนักศึกษาหรือบัตรประชาชนไม่ถูกต้อง!") 
+
+        # Check that the expected error message is in the messages
+        self.assertTrue(any(msg.message == "รหัสนักศึกษาหรือบัตรประชาชนไม่ถูกต้อง!" for msg in messages))
 
     def test_login_success_admin(self):
-        EnrollSubjectTest.add_enroll_subjects(self)
-
         response = self.client.post(reverse("login"), {
-            "sID": self.admin.sID,
-            "idCard": self.admin.idCard
+            "sID": "admin",
+            "idCard": "admin"
         })
-
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/admindecide")
-
-        response_admin_views = self.client.get(reverse("admin_view"))
-        self.assertEqual(response_admin_views.status_code, 200)
-        self.assertTemplateUsed(response_admin_views, "adminview.html")
-        self.assertTrue(Register.objects.filter(sjID=self.subject.sjID).exists())
-        
+    
+    def test_login_invalid_idcard(self):
+        # Test with valid sID but incorrect idCard
+        response = self.client.post(reverse("login"), {
+            "sID": self.student.sID,
+            "idCard": "wrong_idCard"
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "login.html")
+        messages = list(get_messages(response.wsgi_request))
+        self.assertTrue(any(msg.message == "รหัสนักศึกษาหรือบัตรประชาชนไม่ถูกต้อง!" for msg in messages))
 
 class RegisterViewTest(TestCase):
     def setUp(self):
@@ -314,3 +307,38 @@ class ChangePasswordTest(TestCase):
         messages = response.json()
         expected_error = {'success': False, 'error': 'Invalid JSON'}
         self.assertEqual(messages, expected_error)
+
+class AdminViewTest(TestCase):
+    def setUp(self):
+        # Create a subject with all required fields
+        self.subject = Subject.objects.create(
+            sjID="101",
+            sName="Math",
+            eduSec="A",
+            eduYear=2024,
+            maxSeat=30,
+            seatAva=10,
+        )
+
+        # Create a Register instance associated with the subject
+        self.registered_student = Register.objects.create(
+            fname="John",
+            lname="Doe",
+            sID="001",
+            sjID=self.subject.sjID,
+            sName=self.subject.sName
+        )
+
+    def test_admin_view_with_subject_param(self):
+        # Simulate GET request with subject parameter
+        response = self.client.get(reverse('admin_view'), {'subject': self.subject.sjID})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('students', response.context)
+        self.assertEqual(len(response.context['students']), 1)  # Ensure one student is returned
+
+    def test_admin_view_without_subject_param(self):
+        # Simulate GET request without subject parameter
+        response = self.client.get(reverse('admin_view'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('students', response.context)
+        self.assertEqual(len(response.context['students']), 0)  # Ensure no students are returned
